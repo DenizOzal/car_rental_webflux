@@ -23,6 +23,12 @@ public class User implements UserDetails {
     @Column("user_id")
     private Integer user_id;
 
+    public User(String username, String password, Role roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
     @Column("username")
     private String username;
 
@@ -33,7 +39,7 @@ public class User implements UserDetails {
     private Boolean enabled;
 
     @Column("roles")
-    private List<Role> roles;
+    private Role roles;
 
     @Override
     public String getUsername() {
@@ -66,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(authority -> new SimpleGrantedAuthority(authority.name())).collect(Collectors.toList());
+        return null;
     }
 
     @JsonIgnore

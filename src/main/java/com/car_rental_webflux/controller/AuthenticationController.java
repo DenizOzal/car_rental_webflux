@@ -1,6 +1,8 @@
 package com.car_rental_webflux.controller;
 
 
+import com.car_rental_webflux.model.Role;
+import com.car_rental_webflux.model.User;
 import com.car_rental_webflux.security.JWTUtil;
 import com.car_rental_webflux.security.PBKDF2Encoder;
 import com.car_rental_webflux.model.AuthRequest;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 @RestController
 public class AuthenticationController {
@@ -30,6 +34,8 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
+        User user = new User(999,"koray","koray",true,Role.ROLE_USER);
+        userService.save(user).subscribe();
         return userService.findByUsername(ar.getUsername())
             .filter(userDetails -> {
                 return passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword());
@@ -38,5 +44,11 @@ public class AuthenticationController {
                 return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
                  })
             .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
+    }
+
+    @PostMapping("/signup")
+    public Mono<ResponseEntity> signup(@RequestBody User user) {
+        return ResponseEntity.ok(userService.save(new User(user.getUsername(),passwordEncoder.encode(user.getPassword()),user.getRoles())).subscribe());
+
     }
 }
