@@ -1,5 +1,6 @@
 package com.car_rental_webflux.security;
 
+import com.car_rental_webflux.model.Role;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 
@@ -10,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,11 +30,11 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
             .switchIfEmpty(Mono.empty())
             .map(valid -> {
                 Claims claims = jwtUtil.getAllClaimsFromToken(authToken);
-                List<String> rolesMap = claims.get("role", List.class);
+                String rolesMap = claims.get("role", String.class);
                 return new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    rolesMap.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    rolesMap.lines().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
                 );
             });
     }

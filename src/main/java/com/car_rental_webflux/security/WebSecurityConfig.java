@@ -20,7 +20,7 @@ public class WebSecurityConfig {
     private SecurityContextRepository securityContextRepository;
 
     @Bean
-    public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .exceptionHandling()
                 .authenticationEntryPoint((swe, e) -> 
@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/login").permitAll()
+                .pathMatchers("/signup").permitAll()
                 .anyExchange().authenticated()
                 .and().build();
     }

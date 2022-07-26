@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Serializer;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,8 @@ public class JWTUtil {
 
     @Value("${springbootwebfluxjjwt.jjwt.secret}")
     private String secret;
+
+    private static final int VERSION = 9;
 
     @Value("${springbootwebfluxjjwt.jjwt.expiration}")
     private String expirationTime;
@@ -56,9 +59,9 @@ public class JWTUtil {
 
     private String doGenerateToken(Map<String, Object> claims, String username) {
         Long expirationTimeLong = Long.parseLong(expirationTime); //in second
+
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
