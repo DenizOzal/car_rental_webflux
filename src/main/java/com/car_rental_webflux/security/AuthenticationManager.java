@@ -1,6 +1,5 @@
 package com.car_rental_webflux.security;
 
-import com.car_rental_webflux.model.Role;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 
@@ -10,8 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import java.util.List;
-import java.util.Set;
+
 import java.util.stream.Collectors;
 
 @Component

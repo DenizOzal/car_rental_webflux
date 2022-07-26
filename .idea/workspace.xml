@@ -4,7 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cccbaf5e-9b39-4366-95a4-3b080c52875f" name="Changes" comment="" />
+    <list default="true" id="cccbaf5e-9b39-4366-95a4-3b080c52875f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/CarController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/ModelController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Car.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/repository/CarRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/repository/ModelRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/service/CarService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/service/ModelService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/AuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/ResourceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/ResourceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/AuthRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/auth/AuthRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/auth/AuthResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/auth/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/enumaration/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/security/AuthenticationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/security/AuthenticationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/service/UserService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,6 +87,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="SDKs" />
@@ -107,12 +128,23 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/car_rental_webflux/service/UserService.java</url>
-          <line>34</line>
+          <line>19</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

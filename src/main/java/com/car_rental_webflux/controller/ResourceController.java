@@ -1,6 +1,6 @@
 package com.car_rental_webflux.controller;
 
-import com.car_rental_webflux.model.Message;
+import com.car_rental_webflux.auth.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
