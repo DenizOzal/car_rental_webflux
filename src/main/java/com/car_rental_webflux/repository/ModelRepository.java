@@ -7,4 +7,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ModelRepository extends ReactiveCrudRepository<Model, Integer> {
+
+
 }

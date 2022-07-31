@@ -30,6 +30,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public User(String password) {
+        this.password = password;
+    }
+
     @Column("username")
     private String username;
 
@@ -41,6 +45,8 @@ public class User implements UserDetails {
 
     @Column("roles")
     private Role roles;
+
+
 
     @Override
     public String getUsername() {

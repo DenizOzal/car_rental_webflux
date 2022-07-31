@@ -19,7 +19,6 @@ public class Car {
     @Id
     private Integer car_id;
 
-
     @Column("model_id")
     private Integer model_id;
 
