@@ -41,10 +41,8 @@ public class Reservation {
     private Integer carId;
 
     @Column("reservation_start")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime reservation_start;
 
     @Column("reservation_end")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime reservation_end;
 }

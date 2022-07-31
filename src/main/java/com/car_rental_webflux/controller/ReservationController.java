@@ -53,14 +53,12 @@ public class ReservationController {
                             reservation -> {
                                 AtomicInteger j = new AtomicInteger(0);
                                 for(LocalDateTime date = reservationRequest.getReservation_start(); !date.isAfter(reservationRequest.getReservation_end()); date = date.plusDays(1)){
-                                    reservationService.findReservationSlot(date)
-                                            .hasElements()
-                                            .map(temp -> {
-                                                if(!temp){
-
-                                                }
+                                     reservationService.findReservationSlot(date)
+                                            .flatMap(temp -> {
+                                                temp.getUser_id();
+                                                j.getAndIncrement();
                                                 return Mono.error(new Error("Reservation slot is not available"));
-                                            }).subscribe();
+                                            });
                                 }
                                 return reservationService.save(new Reservation(reservation.getUser_id(),reservationRequest.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end())).log("selam");
                                 //return Mono.just(reservationService.save(new Reservation(reservation.getUser_id(),reservation.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end())));

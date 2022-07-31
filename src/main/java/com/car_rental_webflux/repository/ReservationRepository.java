@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface ReservationRepository extends ReactiveCrudRepository<Reservation, Integer> {
-    @Query("SELECT * FROM reservation WHERE reservation_start <= :reservation OR reservation_end >= :reservation")
+    @Query("SELECT * FROM reservation WHERE reservation_start <= :reservation OR reservation_end >= :reservat")
     Flux<Reservation> findReservationSlot(@Param("reservation") LocalDateTime reservation);
 
     @Query("SELECT * FROM reservation WHERE car_id != :carId")
