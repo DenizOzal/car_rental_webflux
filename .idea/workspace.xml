@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cccbaf5e-9b39-4366-95a4-3b080c52875f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/controller/ReservationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/model/Reservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/repository/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/car_rental_webflux/repository/ReservationRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +110,7 @@
       <workItem from="1659075184061" duration="28540000" />
       <workItem from="1659206876817" duration="15109000" />
       <workItem from="1659263368883" duration="6153000" />
-      <workItem from="1659297090274" duration="1201000" />
+      <workItem from="1659297090274" duration="1560000" />
     </task>
     <servers />
   </component>
