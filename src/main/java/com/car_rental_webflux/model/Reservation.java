@@ -41,10 +41,10 @@ public class Reservation {
     private Integer carId;
 
     @Column("reservation_start")
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime reservation_start;
 
     @Column("reservation_end")
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime reservation_end;
 }

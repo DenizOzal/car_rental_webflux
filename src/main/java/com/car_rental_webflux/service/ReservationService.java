@@ -19,6 +19,8 @@ public class ReservationService {
     public Flux<Reservation> findAll(){
         return reservationRepository.findAll();
     }
+    public Flux<Reservation> getAllReservationUser(Integer user_id){return reservationRepository.getAllReservationUser(user_id);}
+
     public Mono<Reservation> save(Reservation reservation){
         return reservationRepository.save(reservation);
     }
@@ -27,15 +29,13 @@ public class ReservationService {
         return reservationRepository.findById(reservationId);
     }
 
+    public Flux<Reservation> findByUserReservation(Integer reservation_id, Integer user_id){
+        return reservationRepository.findByUserReservation(reservation_id,user_id);
+    }
     public Mono<Void> deleteById(Integer reservationId){
         return reservationRepository.deleteById(reservationId);
     }
-    public Flux<Reservation> findReservationSlot(LocalDateTime date) {
-        return reservationRepository.findReservationSlot(date);
+    public Flux<Reservation> findReservationSlot(LocalDateTime reservation_start, LocalDateTime reservation_end) {
+        return reservationRepository.findReservationSlot(reservation_start,reservation_end);
     }
-
-    public Mono<Reservation> findByCarId(Integer carId){
-        return reservationRepository.findByCarId(carId);
-    }
-
 }

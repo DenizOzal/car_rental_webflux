@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
-
 @RestController
 public class ReservationController {
     private static Logger LOG = LoggerFactory.getLogger(DemoApplication.class);
+
     @Autowired
     private ReservationService reservationService;
 
@@ -36,62 +34,77 @@ public class ReservationController {
         return reservationService.findAll();
     }
 
+    @GetMapping("/reservation-user")
+    @PreAuthorize("hasRole('USER')")
+    Flux<Reservation> getAllUser() {
+        String token = (String) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+
+        return userService.findByUsername(jwtUtil.getUsernameFromToken(token))
+                .flatMapMany(user -> reservationService.getAllReservationUser(user.getUser_id()));
+    }
+
     @PostMapping("/reservation")
     @PreAuthorize("hasRole('USER')")
     Mono<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        int i = 0;
+        String token = (String) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if(reservationRequest.getReservation_start().isEqual(reservationRequest.getReservation_end()) || reservationRequest.getReservation_start().isAfter(reservationRequest.getReservation_end())){
+            return Mono.error(new Error("Please check your reservation dates!!!"));
+        }
 
+        return userService.findByUsername(jwtUtil.getUsernameFromToken(token)).flatMap(
+            user -> {
+                return reservationService.findReservationSlot(reservationRequest.getReservation_start(),reservationRequest.getReservation_end())
+                        .hasElements()
+                        .flatMap(
+                            temp -> {
+                                if(temp){
+                                    return Mono.error(new Error("Reservation slots are not available!!!"));
+                                }
+                                else{
+                                    return reservationService.save(new Reservation(user.getUser_id(),reservationRequest.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end()))
+                                            .onErrorMap(error -> new Error("Car is not available!!!"));
+                                }
+                        });
+            });
+    }
+
+    // User can remove a reservation
+    @DeleteMapping("/reservation-user/{id}")
+    @PreAuthorize("hasRole('USER')")
+    Mono<Void> deleteByIdUser(@PathVariable("id") Integer id) {
         String token = (String) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
         return userService.findByUsername(jwtUtil.getUsernameFromToken(token)).flatMap(
                 user -> {
-                    LOG.info("Selam1: " );
-                    Integer user_id = user.getUser_id();
-                    LOG.info("Selam2: " );
-                    return reservationService.findByCarId(reservationRequest.getCarId()).flatMap(
-                            reservation -> {
-                                AtomicInteger j = new AtomicInteger(0);
-                                for(LocalDateTime date = reservationRequest.getReservation_start(); !date.isAfter(reservationRequest.getReservation_end()); date = date.plusDays(1)){
-                                     reservationService.findReservationSlot(date)
-                                            .flatMap(temp -> {
-                                                temp.getUser_id();
-                                                j.getAndIncrement();
-                                                return Mono.error(new Error("Reservation slot is not available"));
-                                            });
-                                }
-                                return reservationService.save(new Reservation(reservation.getUser_id(),reservationRequest.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end())).log("selam");
-                                //return Mono.just(reservationService.save(new Reservation(reservation.getUser_id(),reservation.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end())));
-                            }
-                    ).switchIfEmpty(Mono.error(new Error("Car is not available")));
-                            /*.flatMap(
-                                    reservation -> {
-                                        return reservationService.save(new Reservation(reservation.getUser_id(),reservation.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end()));
-                                    }
-                            );*/
-                });
-     /*   if(!reservationService.findByCarId(reservation.getCar_id()).equals(null)){
-            Mono<Reservation> temp =  reservationService.findByCarId(reservation.getCar_id());
-            LOG.info("LOOOL: " + temp.map(reservation1 -> reservation1.getReservation_id()).toString());
-            return Mono.error(new Error("Car has already been taken"));
-        }*/
+                   return reservationService.findByUserReservation(id,user.getUser_id())
+                           .hasElements()
+                           .flatMap(
+                                   flag -> {
+                                       if(flag){
 
-       /* for (LocalDateTime date = reservation.getReservation_start(); !date.isAfter(reservation.getReservation_end()); date = date.plusDays(1))
-        {
-            if(!reservationService.findReservationSlot(date).equals(null)){
-                i++;
-            }
-           *//* i++;
-            LOG.info("i: " + i);*//*
-        }*/
-       /* if(i == 0){
-            return reservationService.save(new Reservation());
-        }*/
+                                           return reservationService.deleteById(id);
+                                       }
+                                       else
+                                       {
+                                           return Mono.error(new Error("Reservation id is not found"));
+                                       }
+                                   }
+                           );
+                      /*     .onErrorMap(error -> new Error("1"))
+                           .doOnSuccess(success -> ResponseEntity.ok().body("Reservation id:" + id + " is successfully deleted"));*/
+                           /*.on(Mono.error(new Error("Reservation id is not true!!!")))
+                           .doOnSuccess(success -> ResponseEntity.ok().body("Reservation id:" + id + " is successfully deleted"));*/
+                }
+        );
     }
 
-    // Admin and User can remove a reservation
+
+    // Admin can remove a reservation
     @DeleteMapping("/reservation/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     Mono<Void> deleteById(@PathVariable("id") Integer id) {
         return reservationService.findById(id).flatMap(p ->
                 reservationService.deleteById(p.getReservation_id()));
