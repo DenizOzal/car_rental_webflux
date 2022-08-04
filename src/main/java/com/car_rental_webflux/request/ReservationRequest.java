@@ -1,4 +1,4 @@
-package com.car_rental_webflux.auth;
+package com.car_rental_webflux.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

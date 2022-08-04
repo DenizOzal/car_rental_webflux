@@ -1,4 +1,4 @@
-package com.car_rental_webflux.auth;
+package com.car_rental_webflux.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AuthResponse {
-    private String token;
-
+public class PasswordChecking {
+    private String newPassword;
+    private String password;
 }

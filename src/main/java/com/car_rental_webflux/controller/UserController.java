@@ -1,6 +1,6 @@
 package com.car_rental_webflux.controller;
 
-import com.car_rental_webflux.auth.PasswordChecking;
+import com.car_rental_webflux.request.PasswordChecking;
 import com.car_rental_webflux.model.User;
 import com.car_rental_webflux.security.JWTUtil;
 import com.car_rental_webflux.security.PBKDF2Encoder;

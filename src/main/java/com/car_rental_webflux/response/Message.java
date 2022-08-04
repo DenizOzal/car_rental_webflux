@@ -1,4 +1,4 @@
-package com.car_rental_webflux.auth;
+package com.car_rental_webflux.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

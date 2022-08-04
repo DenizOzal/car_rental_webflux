@@ -1,7 +1,7 @@
 package com.car_rental_webflux.controller;
 
 import com.car_rental_webflux.DemoApplication;
-import com.car_rental_webflux.auth.ReservationRequest;
+import com.car_rental_webflux.request.ReservationRequest;
 import com.car_rental_webflux.model.Reservation;
 import com.car_rental_webflux.security.JWTUtil;
 import com.car_rental_webflux.service.ReservationService;
