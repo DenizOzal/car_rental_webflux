@@ -3,6 +3,7 @@ package com.car_rental_webflux.controller;
 import com.car_rental_webflux.DemoApplication;
 import com.car_rental_webflux.request.ReservationRequest;
 import com.car_rental_webflux.model.Reservation;
+import com.car_rental_webflux.response.CustomResponseEntity;
 import com.car_rental_webflux.security.JWTUtil;
 import com.car_rental_webflux.service.ReservationService;
 import com.car_rental_webflux.service.UserService;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 public class ReservationController {
@@ -30,50 +33,72 @@ public class ReservationController {
 
     @GetMapping("/reservation")
     @PreAuthorize("hasRole('ADMIN')")
-    Flux<Reservation> getAll() {
-        return reservationService.findAll();
+    Flux<CustomResponseEntity<List<Reservation>>> getAll() {
+        return reservationService.findAll().collectList().flatMapMany(
+                response -> {
+                    if(response.isEmpty()){
+                        return Flux.just(new CustomResponseEntity<>(1, "Reservation is not found", null));
+                    }
+                    else{
+                        return Flux.just(new CustomResponseEntity<>(0, "Success", response));
+                    }
+                }
+        );
     }
 
     @GetMapping("/reservation-user")
     @PreAuthorize("hasRole('USER')")
-    Flux<Reservation> getAllUser() {
+    Flux<CustomResponseEntity<?>> getAllReservationUser() {
         String token = (String) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
         return userService.findByUsername(jwtUtil.getUsernameFromToken(token))
-                .flatMapMany(user -> reservationService.getAllReservationUser(user.getUser_id()));
+                .flatMapMany(user ->
+                {
+                    return reservationService.getAllReservationUser(user.getUser_id())
+                            .collectList().flatMapMany(response ->
+                            {
+                                if (response.isEmpty()) {
+                                    return Flux.just(new CustomResponseEntity<>(1, "Model is not found", null));
+                                } else {
+                                    return Flux.just(new CustomResponseEntity<>(0, "Success", response));
+                                }
+                            });
+                }).onErrorReturn(new CustomResponseEntity<>(1,"User is not found",null));
     }
 
     @PostMapping("/reservation")
     @PreAuthorize("hasRole('USER')")
-    Mono<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
+    Mono<CustomResponseEntity<?>> addReservation(@RequestBody ReservationRequest reservationRequest) {
         String token = (String) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         if(reservationRequest.getReservation_start().isEqual(reservationRequest.getReservation_end()) || reservationRequest.getReservation_start().isAfter(reservationRequest.getReservation_end())){
-            return Mono.error(new Error("Please check your reservation dates!!!"));
+            return Mono.just(new CustomResponseEntity<>(3,"Reservation dates are not true",null));
         }
 
         return userService.findByUsername(jwtUtil.getUsernameFromToken(token)).flatMap(
-            user -> {
-                return reservationService.findReservationSlot(reservationRequest.getReservation_start(),reservationRequest.getReservation_end())
-                        .hasElements()
-                        .flatMap(
-                            temp -> {
-                                if(temp){
-                                    return Mono.error(new Error("Reservation slots are not available!!!"));
-                                }
-                                else{
-                                    return reservationService.save(new Reservation(user.getUser_id(),reservationRequest.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end()))
-                                            .onErrorMap(error -> new Error("Car is not available!!!"));
-                                }
-                        });
-            });
+                user -> {
+                    return reservationService.findReservationSlot(reservationRequest.getReservation_start(),reservationRequest.getReservation_end())
+                            .hasElements()
+                            .flatMap(
+                                    temp -> {
+                                        if(temp){
+                                            return Mono.just(new CustomResponseEntity<>(1,"Reservations slots are not found",null));
+                                        }
+                                        else{
+                                            Reservation reservation = new Reservation(user.getUser_id(),reservationRequest.getCarId(), reservationRequest.getReservation_start(),reservationRequest.getReservation_end());
+                                            return reservationService.save(reservation)
+                                                    .map(res -> new CustomResponseEntity<>(0,"Success",res))
+                                                    .onErrorReturn(new CustomResponseEntity<>(1,"Car is not found",null));
+                                        }
+                                    });
+                }).onErrorReturn(new CustomResponseEntity<>(1,"User is not found",null));
     }
 
     // User can remove a reservation
     @DeleteMapping("/reservation-user/{id}")
     @PreAuthorize("hasRole('USER')")
-    Mono<Void> deleteByIdUser(@PathVariable("id") Integer id) {
+    Mono<CustomResponseEntity<?>> deleteByIdUser(@PathVariable("id") Integer id) {
         String token = (String) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
@@ -84,29 +109,24 @@ public class ReservationController {
                            .flatMap(
                                    flag -> {
                                        if(flag){
-
-                                           return reservationService.deleteById(id);
+                                           return reservationService.deleteById(id).then(Mono.just(new CustomResponseEntity<>(0,"Success",id)));
                                        }
                                        else
                                        {
-                                           return Mono.error(new Error("Reservation id is not found"));
+                                           return Mono.just(new CustomResponseEntity<>(1,"Reservation is not found",null));
                                        }
                                    }
                            );
-                      /*     .onErrorMap(error -> new Error("1"))
-                           .doOnSuccess(success -> ResponseEntity.ok().body("Reservation id:" + id + " is successfully deleted"));*/
-                           /*.on(Mono.error(new Error("Reservation id is not true!!!")))
-                           .doOnSuccess(success -> ResponseEntity.ok().body("Reservation id:" + id + " is successfully deleted"));*/
                 }
-        );
+        ).onErrorReturn(new CustomResponseEntity<>(1,"User is not found",null));
     }
-
 
     // Admin can remove a reservation
     @DeleteMapping("/reservation/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    Mono<Void> deleteById(@PathVariable("id") Integer id) {
+    Mono<CustomResponseEntity<Reservation>> deleteById(@PathVariable("id") Integer id) {
         return reservationService.findById(id).flatMap(p ->
-                reservationService.deleteById(p.getReservation_id()));
+                reservationService.deleteById(p.getReservation_id()).then(Mono.just(new CustomResponseEntity<>(0,"Success",p))))
+                .switchIfEmpty(Mono.just(new CustomResponseEntity<>(1,"Reservation is not found",null)));
     }
 }
