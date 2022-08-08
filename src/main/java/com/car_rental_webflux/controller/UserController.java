@@ -24,7 +24,8 @@ public class UserController {
 
     @Autowired
     private JWTUtil jwtUtil;
-    // Admin can add a car
+
+    // Admin can add user
     @PostMapping("/user")
     @PreAuthorize("hasRole('ADMIN')")
     Mono<CustomResponseEntity<User>> addUser(@RequestBody UserRequest userRequest) {
@@ -34,7 +35,7 @@ public class UserController {
                 .onErrorReturn(new CustomResponseEntity<>(2,"User is already exist",user));
     }
 
-    // Admin can remove a car
+    // Admin can delete user
     @DeleteMapping("/user/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     Mono<CustomResponseEntity<User>> deleteById(@PathVariable("id") Integer id) {
